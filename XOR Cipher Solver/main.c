@@ -1,8 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
+#include<string.h>
 
 #include "HashTable.h"
+#include "Solver.h"
 
 HashTable* read_words(FILE* file, HashTable* ht);
 
@@ -12,6 +14,7 @@ void main()
 	//char encrypted_file_name[CHAR_MAX], words_file_name[CHAR_MAX];
 	char* encrypted_file_name = "encrypt.txt";
 	char* words_file_name = "words.txt";
+
 	int key_length = 0;
 	char* file_content = NULL;
 
@@ -25,8 +28,9 @@ void main()
 		return;
 	}
 
-	printf("What is the key size (number of bits)? ");
-	scanf("%d", &key_length);
+	//printf("What is the key size (number of bits)? ");
+	//scanf("%d", &key_length);
+	key_length = 8;
 
 	if (key_length < 1)
 	{
@@ -71,8 +75,20 @@ void main()
 	init_hashtable(&ht);
 
 	read_words(words_file, &ht);
-	print_hashtable(&ht);
 
+	//printf("Text: %s\n", file_content);
+
+	/*uchar key = 0x9d;
+	uchar* text = solve_for_key(file_content, &key, 4);
+
+	uchar* dup_text = _strdup(text);
+	free(text);
+	text = solve_for_key(dup_text, &key, 4);
+	printf("Decrypted: %s\n", text);
+	free(text);*/
+
+	uchar* decr = solve(file_content, &ht, 4);
+	printf("Text: %s\n", decr);
 
 	fclose(encrypted_file);
 	fclose(words_file);
@@ -107,7 +123,6 @@ void main_check_hashtable()
 	printf("is 'Kabiri' exists? %s\n", is_exists_hashtable(&ht, "Kabiri") ? "Yes" : "No");
 	printf("is 'Koala' exists? %s\n", is_exists_hashtable(&ht, "Koala") ? "Yes" : "No");
 	printf("is '' exists? %s\n", is_exists_hashtable(&ht, "") ? "Yes" : "No");
-
 
 	free_hashtable(&ht);
 }
