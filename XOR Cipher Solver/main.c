@@ -3,10 +3,8 @@
 #include <stdio.h>
 #include<string.h>
 
-#include "HashTable.h"
+#include "main.h"
 #include "Solver.h"
-
-HashTable* read_words(FILE* file, HashTable* ht);
 
 void main()
 {
@@ -16,7 +14,7 @@ void main()
 	char* words_file_name = "words.txt";
 
 	int key_length = 0;
-	char* file_content = NULL;
+	uchar* file_content = NULL;
 
 	//printf("Please enter the encrypted file name: ");
 	//scanf("%s", encrypted_file_name);
@@ -53,7 +51,8 @@ void main()
 	fseek(encrypted_file, 0L, SEEK_END);
 	int encrypt_file_len = ftell(encrypted_file);
 	fseek(encrypted_file, 0, SEEK_SET);
-	file_content = malloc(sizeof(char) * (encrypt_file_len + 1));
+
+	file_content = malloc(sizeof(uchar) * (encrypt_file_len + 1));
 	if (!file_content)
 	{
 		printf("Error allocate memory.\n");
@@ -62,7 +61,7 @@ void main()
 		return;
 	}
 
-	if (fread(file_content, sizeof(char), encrypt_file_len, encrypted_file) != (encrypt_file_len * sizeof(char)))
+	if (fread(file_content, sizeof(uchar), encrypt_file_len, encrypted_file) != (encrypt_file_len * sizeof(uchar)))
 	{
 		printf("Unable to read file.\n");
 		fclose(encrypted_file);
@@ -87,8 +86,16 @@ void main()
 	printf("Decrypted: %s\n", text);
 	free(text);*/
 
-	uchar* decr = solve(file_content, &ht, 4);
-	printf("Text: %s\n", decr);
+	uchar* text = "hey guy\0";
+	uchar real_key = 0xa << 4;
+	uchar* encr = solve_for_key(text, &real_key, 4);
+	printf("encrypt: %s\n", encr);
+	encr = solve_for_key(encr, &real_key, 4);
+	printf("text: %s\n", encr);
+
+
+	uchar* decr = solve(encr, &ht, 4);
+	printf("decrypt: %s\n", decr);
 
 	fclose(encrypted_file);
 	fclose(words_file);

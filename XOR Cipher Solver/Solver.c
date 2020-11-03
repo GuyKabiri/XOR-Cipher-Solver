@@ -16,11 +16,13 @@ uchar* solve(uchar* encrypted, HashTable* words, int key_length)
 
 	uchar* decrypted = NULL;
 
-	for (int i = 0; i < pow(2, key_length); i++)
+	int iteration_num = pow(2, key_length);
+	for (int i = 0; i < iteration_num; i++)
 	{
-		*key = i << (byte_num % CHAR_BIT);			//	assign the next key and shift it to the left-most digit
+		*key = (uint)(i << (key_length % CHAR_BIT));			//	assign the next key and shift it to the left-most digit
 		decrypted = solve_for_key(encrypted, key, key_length);
-		if (i == 0x9d)
+
+		if (is_real_text(decrypted, words))			//	if the decrypted text is actual words
 			break;
 	}
 
@@ -45,7 +47,7 @@ uchar* solve_for_key(uchar* encrypted, uchar* key, int key_len)
 	while (*pCurrChar)	//	while current character is not '\0', iterate over each character
 	{
 		*pCurrDecrypt = (*pCurrChar) ^ key[key_index % key_len];
-		key_index++;
+ 		key_index++;
 		pCurrChar++;
 		pCurrDecrypt++;
 	}
@@ -54,14 +56,7 @@ uchar* solve_for_key(uchar* encrypted, uchar* key, int key_len)
 	return decrypted;
 }
 
-
-//char* encrypt(char* text, char* key)
-//{
-//	if (!text || !key)	return NULL;
-//
-//	int text_len = strlen(text);
-//	char* encrypt = malloc(sizeof(char) * (text_len + 1));
-//	if (!encrypt)	return NULL;
-//
-//	int iteration
-//}
+int is_real_text(uchar* decrypted, HashTable* words)
+{
+	return 0;
+}
