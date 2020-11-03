@@ -3,7 +3,12 @@
 
 #include "HashTable.h"
 
-int solve(char* encrypted, HashTable* words, int key_length);
-char* solve_for_key(char* encrypted, char* key);
+typedef unsigned char uchar;
+
+uchar* solve(uchar* encrypted, HashTable* words, int key_length);
+uchar* solve_for_key(uchar* encrypted, uchar* key, int key_len);
+
+
+//char* encrypt(char* text, char* key);
 
 #endif // !__SOLVER_H__
