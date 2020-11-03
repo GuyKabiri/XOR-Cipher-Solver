@@ -3,6 +3,8 @@
 
 #include "Node.h"
 
+//	Linked list struct which the head node is an empty node
+//	The actual first node is the head->next
 typedef struct linkedlist {
 	Node head;
 	int size;
